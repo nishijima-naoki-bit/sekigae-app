@@ -1,0 +1,357 @@
+body {
+    font-family: sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    padding: 2em 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #4682b4;
+}
+h2 {
+    border-bottom: 2px solid #4682b4;
+    padding-bottom: 0.3em;
+    margin-top: 1.5em;
+}
+h3 {
+    border-bottom: none;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+p {
+    text-align: center;
+    color: #555;
+    line-height: 1.6;
+}
+
+.step-container {
+    background-color: #fdfdff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+.layout-setting-area, .file-upload-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1em;
+}
+
+.grid-setting {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.grid-setting input {
+    width: 60px;
+    font-size: 1.2em;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#class-selector {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 1em auto;
+    padding: 10px;
+    font-size: 1.1em;
+    border-radius: 4px;
+}
+
+#shuffle-button {
+    display: block;
+    width: 80%;
+    max-width: 400px;
+    margin: 1em auto 0 auto;
+    background-color: #d9534f;
+    color: white;
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.3em;
+    transition: background-color 0.3s;
+}
+#shuffle-button:hover {
+    background-color: #c9302c;
+}
+#shuffle-button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+
+.file-label {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #5cb85c;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.1em;
+}
+input[type="file"] {
+    display: none;
+}
+#encoding-selector {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.data-management-area {
+    text-align: center;
+    margin-top: 1.5em;
+    padding-top: 1.5em;
+    border-top: 1px solid #eee;
+}
+#clear-data-button {
+    background-color: #6c757d;
+    font-size: 1em;
+    padding: 0.6em 1.2em;
+    margin: 0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#clear-data-button:hover {
+    background-color: #5a6268;
+}
+
+
+/* === 欠席者チェックリスト === */
+.student-checklist-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    padding: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.student-checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1em;
+}
+.student-checklist-item input {
+    width: 18px;
+    height: 18px;
+}
+.student-checklist-item label {
+    cursor: pointer;
+}
+
+/* === レイアウトエディタ === */
+.layout-editor {
+    text-align: center;
+    background-color: #f0f8ff;
+    padding: 1em;
+    border-radius: 5px;
+    margin-top: 1.5em;
+}
+.layout-editor button {
+    font-size: 1em;
+    padding: 0.6em 1.2em;
+    margin: 0.5em;
+    background-color: #5bc0de;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.layout-editor button#save-layout-button {
+    background-color: #337ab7;
+}
+.layout-editor button.editing {
+    background-color: #f0ad4e;
+}
+
+/* === 日付入力欄のスタイル === */
+.date-setting {
+    text-align: center;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+.date-setting input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.1em;
+    border-color: #4682b4;
+}
+
+/* === 結果表示エリア === */
+.result-wrapper {
+    margin-top: 1.5em;
+}
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+}
+.result-header h2 {
+    margin: 0;
+    text-align: left;
+}
+.export-buttons button {
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+    margin-left: 0.5em;
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.export-buttons button:hover {
+    background-color: #eea236;
+}
+#teachers-desk {
+    width: 200px;
+    padding: 10px;
+    margin: 0 auto 15px auto;
+    border: 2px solid #8d6e63;
+    background-color: #efebe9;
+    color: #5d4037;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+}
+#seat-map-container {
+    width: 100%;
+    overflow-x: auto;
+}
+#seat-map {
+    margin: 1em auto;
+    display: grid;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    perspective: 1000px; /* 3D効果のため */
+}
+.layout-editing #seat-map .seat {
+    cursor: pointer; /* 編集モードの時だけカーソルを変える */
+}
+
+/* === 座席のスタイル === */
+.seat {
+    border-radius: 5px;
+    padding: 0.5em;
+    text-align: center;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-wrap: break-word;
+    line-height: 1.3;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    /* アニメーション用プロパティ */
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+.seat .seat-id {
+    font-size: 1em;
+    color: #555;
+}
+.seat .seat-name {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.seat.empty {
+    background-color: #f8f9fa;
+    color: #adb5bd;
+    border: 1px solid #dee2e6;
+}
+.seat.male {
+    background-color: #dbeafe;
+    border: 1px solid #90cdf4;
+}
+.seat.female {
+    background-color: #fee2e2;
+    border: 1px solid #f9a8a8;
+}
+.seat.inactive {
+    background: repeating-linear-gradient(45deg, #ced4da, #ced4da 10px, #e9ecef 10px, #e9ecef 20px);
+    border-style: dashed;
+    color: #6c757d;
+}
+.seat.inactive .seat-id,
+.seat.inactive .seat-name {
+    visibility: hidden;
+}
+
+/* === アニメーション用のスタイル === */
+.seat.flipping {
+    transform: rotateY(180deg);
+}
+
+/* === PDF出力用のスタイル === */
+.rotate-180 {
+    transform: rotate(180deg);
+}
+.rotate-180 .seat {
+    transform: rotate(180deg);
+}
+
+/* === PDF生成中のオーバーレイ === */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+}
+.loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #4682b4;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1.5s linear infinite;
+}
+#loading-overlay p {
+    color: white;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

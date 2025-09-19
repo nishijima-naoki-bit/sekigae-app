@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>席替えアプリ 最終完成版</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>席替えアプリ 最終完成版</h1>
+
+        <div class="step-container">
+            <h2>ステップ1：全名簿の読み込み</h2>
+            <p>全校生徒（または全学年）の名簿CSVファイルを一度だけ読み込んでください。<br>データはブラウザに保存され、次回以降はこの作業は不要です。</p>
+            <div class="file-upload-area">
+                <label for="file-input" class="file-label">全名簿ファイルを選択 (.csv, .txt)</label>
+                <input type="file" id="file-input" accept=".txt,.csv">
+                <select id="encoding-selector">
+                    <option value="UTF-8">UTF-8</option>
+                    <option value="Shift_JIS" selected>Shift_JIS (Excel標準)</option>
+                </select>
+            </div>
+            <div class="data-management-area">
+                <button id="clear-data-button">保存された全名簿とレイアウトを削除</button>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <h2>ステップ2：クラス選択と欠席者設定</h2>
+            <p>クラスを選択し、欠席する生徒にチェックを入れてください。</p>
+            <select id="class-selector">
+                <option value="">← まず名簿を読み込んでください</option>
+            </select>
+            <div id="student-checklist-container" class="student-checklist-container">
+                </div>
+        </div>
+        
+        <div class="step-container">
+            <h2>ステップ3：レイアウト設定と席替え</h2>
+            <div class="layout-setting-area">
+                <h3>座席の最大サイズ</h3>
+                <div class="grid-setting">
+                    <input type="number" id="cols" value="6" min="1">
+                    <span>×</span>
+                    <input type="number" id="rows" value="6" min="1">
+                </div>
+            </div>
+            <div class="layout-editor">
+                <h3>カスタムレイアウト</h3>
+                <p>下の「レイアウト編集」を押すと、座席表の座席をクリックして使用／不使用を切り替えられます。<br>設定したレイアウトは「レイアウト保存」でクラスごとに記憶できます。</p>
+                <button id="edit-layout-button">レイアウト編集を開始</button>
+                <button id="save-layout-button">現在のレイアウトを保存</button>
+            </div>
+            
+            <div class="date-setting">
+                <h3>席替えの適用日</h3>
+                <input type="date" id="start-date-input">
+            </div>
+
+            <button id="shuffle-button">席替えスタート！</button>
+        </div>
+
+        <div class="result-wrapper">
+            <div class="result-header">
+                <h2>席替え結果</h2>
+                <div class="export-buttons">
+                    <button id="export-csv">CSV出力</button>
+                    <button id="export-pdf">PDF出力 (2視点)</button>
+                </div>
+            </div>
+            <div id="teachers-desk">教 卓</div>
+            <div id="seat-map-container">
+                <div id="seat-map">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-overlay">
+        <div class="loading-spinner"></div><p>PDFを生成中です...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
