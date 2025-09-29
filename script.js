@@ -45,10 +45,90 @@ document.addEventListener('DOMContentLoaded', () => {
             allLayoutData = JSON.parse(savedLayouts);
         }
     }
+    
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    // ★ 修正点：createSeatMap関数内の文字数チェックを「6文字以上」のみに修正 ★
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    function createSeatMap(members) {
+        seatMap.innerHTML = '';
+        const cols = parseInt(colsInput.value, 10);
+        const rows = parseInt(rowsInput.value, 10);
+        seatMap.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        let memberIndex = 0;
 
-    // ==========================================================
-    // 機能：ファイル読み込みとクラス自動生成
-    // ==========================================================
+        for (let i = 0; i < cols * rows; i++) {
+            const seat = document.createElement('div');
+            seat.classList.add('seat');
+            seat.dataset.index = i;
+
+            if (inactiveSeatIndexes.has(i)) {
+                seat.classList.add('inactive');
+            } else {
+                const member = (memberIndex < members.length) ? members[memberIndex] : null;
+                if (member) {
+                    // ★修正箇所：6文字以上の場合のみクラスを割り当てる
+                    let longNameClass = '';
+                    if (member.name.length >= 6) {
+                        longNameClass = 'long-name-6';
+                    }
+                    
+                    seat.innerHTML = `<span class="seat-id">${member.id}</span><span class="seat-name ${longNameClass}">${member.name}</span>`;
+                    
+                    const gender = member.gender.toLowerCase();
+                    if (gender.includes('男')) seat.classList.add('male');
+                    else if (gender.includes('女')) seat.classList.add('female');
+                    memberIndex++;
+                } else {
+                    seat.textContent = '空席';
+                    seat.classList.add('empty');
+                }
+            }
+            seatMap.appendChild(seat);
+        }
+        updateCurrentSeatData();
+    }
+
+
+    // (これ以降の関数は変更ありません)
+    function updateCurrentSeatData() {
+        const cols = parseInt(colsInput.value, 10);
+        const allSeats = Array.from(seatMap.querySelectorAll('.seat'));
+        currentSeatData = [];
+        let rowData = [];
+
+        allSeats.forEach((seat, i) => {
+            let cellContent = '使用不可';
+            if (!seat.classList.contains('inactive')) {
+                if (seat.classList.contains('empty')) {
+                    cellContent = '空席';
+                } else {
+                    const id = seat.querySelector('.seat-id').textContent;
+                    const name = seat.querySelector('.seat-name').textContent;
+                    const gender = seat.classList.contains('male') ? '男' : (seat.classList.contains('female') ? '女' : '不明');
+                    cellContent = `${id},${name},${gender}`;
+                }
+            }
+            rowData.push(cellContent);
+
+            if ((i + 1) % cols === 0) {
+                currentSeatData.push(rowData);
+                rowData = [];
+            }
+        });
+        if (rowData.length > 0) currentSeatData.push(rowData);
+    }
+
+    function populateClassSelector() {
+        const classNames = new Set(masterStudentList.map(s => `${s.id.substring(0, 1)}-${s.id.substring(1, 2)}`));
+        classSelector.innerHTML = '<option value="">クラスを選択...</option>';
+        Array.from(classNames).sort().forEach(className => {
+            const option = document.createElement('option');
+            option.value = className;
+            option.textContent = className;
+            classSelector.appendChild(option);
+        });
+    }
+
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -82,20 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
         event.target.value = '';
     });
 
-    function populateClassSelector() {
-        const classNames = new Set(masterStudentList.map(s => `${s.id.substring(0, 1)}-${s.id.substring(1, 2)}`));
-        classSelector.innerHTML = '<option value="">クラスを選択...</option>';
-        Array.from(classNames).sort().forEach(className => {
-            const option = document.createElement('option');
-            option.value = className;
-            option.textContent = className;
-            classSelector.appendChild(option);
-        });
-    }
-
-    // ==========================================================
-    // 機能：クラス選択、欠席者リストとレイアウトの読み込み
-    // ==========================================================
     classSelector.addEventListener('change', () => {
         studentChecklistContainer.innerHTML = '';
         seatMap.innerHTML = '';
@@ -122,9 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ==========================================================
-    // 機能：レイアウト編集
-    // ==========================================================
     function loadLayout(className) {
         const layout = allLayoutData[className];
         if (layout) {
@@ -199,9 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(`「${selectedClass}」のカスタムレイアウトを保存しました。`);
     });
     
-    // ==========================================================
-    // 機能：席替え実行（カードフリップアニメーション）
-    // ==========================================================
     shuffleButton.addEventListener('click', () => {
         const selectedClass = classSelector.value;
         if (!selectedClass) { alert('席替えをするクラスを選択してください。'); return; }
@@ -237,72 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1500);
     });
     
-    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-    // ★ バグ修正点：createSeatMap関数に seat.dataset.index = i; を追加 ★
-    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-    function createSeatMap(members) {
-        seatMap.innerHTML = '';
-        const cols = parseInt(colsInput.value, 10);
-        const rows = parseInt(rowsInput.value, 10);
-        seatMap.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        let memberIndex = 0;
-
-        for (let i = 0; i < cols * rows; i++) {
-            const seat = document.createElement('div');
-            seat.classList.add('seat');
-            seat.dataset.index = i; // ★★★ この一行がバグの修正点です ★★★
-
-            if (inactiveSeatIndexes.has(i)) {
-                seat.classList.add('inactive');
-            } else {
-                const member = (memberIndex < members.length) ? members[memberIndex] : null;
-                if (member) {
-                    seat.innerHTML = `<span class="seat-id">${member.id}</span><span class="seat-name">${member.name}</span>`;
-                    const gender = member.gender.toLowerCase();
-                    if (gender.includes('男')) seat.classList.add('male');
-                    else if (gender.includes('女')) seat.classList.add('female');
-                    memberIndex++;
-                } else {
-                    seat.textContent = '空席';
-                    seat.classList.add('empty');
-                }
-            }
-            seatMap.appendChild(seat);
-        }
-        updateCurrentSeatData();
-    }
-
-    function updateCurrentSeatData() {
-        const cols = parseInt(colsInput.value, 10);
-        const allSeats = Array.from(seatMap.querySelectorAll('.seat'));
-        currentSeatData = [];
-        let rowData = [];
-
-        allSeats.forEach((seat, i) => {
-            let cellContent = '使用不可';
-            if (!seat.classList.contains('inactive')) {
-                if (seat.classList.contains('empty')) {
-                    cellContent = '空席';
-                } else {
-                    const id = seat.querySelector('.seat-id').textContent;
-                    const name = seat.querySelector('.seat-name').textContent;
-                    const gender = seat.classList.contains('male') ? '男' : (seat.classList.contains('female') ? '女' : '不明');
-                    cellContent = `${id},${name},${gender}`;
-                }
-            }
-            rowData.push(cellContent);
-
-            if ((i + 1) % cols === 0) {
-                currentSeatData.push(rowData);
-                rowData = [];
-            }
-        });
-        if (rowData.length > 0) currentSeatData.push(rowData);
-    }
-    
-    // ==========================================================
-    // 機能：CSV解析処理
-    // ==========================================================
     function parseMemberList(text) {
         const lines = text.split(/\r\n|\n/);
         const validMembers = [];
@@ -324,9 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return { validMembers, invalidRows };
     }
 
-    // ==========================================================
-    // 機能：結果のファイル出力
-    // ==========================================================
     exportCsvButton.addEventListener('click', () => {
         if (currentSeatData.length === 0) { alert('席替えを先に実行してください。'); return; }
         let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
@@ -380,9 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ==========================================================
-    // 機能：保存データ削除
-    // ==========================================================
     clearDataButton.addEventListener('click', () => {
         if (confirm('ブラウザに保存されている全てのクラス名簿とカスタムレイアウトを削除します。この操作は元に戻せません。よろしいですか？')) {
             localStorage.removeItem('sekigaeMasterList');
@@ -391,6 +379,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // === アプリケーションの初期化を実行 ===
     initialize();
 });
