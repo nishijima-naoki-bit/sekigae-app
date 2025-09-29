@@ -237,6 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1500);
     });
     
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    // ★ バグ修正点：createSeatMap関数に seat.dataset.index = i; を追加 ★
+    // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     function createSeatMap(members) {
         seatMap.innerHTML = '';
         const cols = parseInt(colsInput.value, 10);
@@ -247,7 +250,8 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < cols * rows; i++) {
             const seat = document.createElement('div');
             seat.classList.add('seat');
-            
+            seat.dataset.index = i; // ★★★ この一行がバグの修正点です ★★★
+
             if (inactiveSeatIndexes.has(i)) {
                 seat.classList.add('inactive');
             } else {
